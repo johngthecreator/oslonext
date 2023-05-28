@@ -4,6 +4,7 @@ import Header from './components/Header';
 import { useState, useEffect } from "react";
 import useMedStore from "./lib/useMedStore";
 import { IMed } from "./lib/IMed";
+import { FaCircle } from 'react-icons/fa';
 
 export default function Home() {
     const drugs = useMedStore(state => state.meds);
@@ -27,6 +28,7 @@ export default function Home() {
                 };
             }catch (e){
                 console.log(e);
+                alert("Can't find that medication!")
             }
         }
     }
@@ -35,13 +37,22 @@ export default function Home() {
       <div className='flex h-full w-full flex-col items-center'>
         <div className='flex flex-col w-full h-2/3 bg-secondary p-6'>
           <h1 className="text-white text-2xl font-black">Search</h1>
-          <div className='flex bg-white h-1/6 md:h-1/5 rounded-xl items-center justify-between overflow-hidden my-2'>
-            <input type='text' className='my-4 outline-0 w-4/5 px-2 m-0'/>
-            <button className='m-2 h-[20px] w-[20px] bg-secondary rounded-xl'></button>
+          <div className='flex bg-white min-h-1/6 md:h-1/5 rounded-xl items-center justify-between overflow-hidden my-2'>
+            <input type='text' onChange={(e)=>setDrugSearch(e.target.value)} className='my-4 outline-0 w-4/5 px-2 m-0'/>
+            <button onClick={()=>getDrugs()} className='m-2 h-[20px] w-[20px] bg-secondary rounded-xl'></button>
+          </div>
+          <div className='flex flex-col overflow-y-scroll'>
+            {drugOptions.map((drug: IMed)=>{
+              return(
+                <button onClick={()=>{addDrugs({name: drug.name, rxcui: drug.rxcui})}} className='flex items-center gap-2 my-2'>
+                  <FaCircle size={13} className='text-white' />
+                  <h1 className='truncate ... text-lg text-white'>{drug.name}</h1>
+                </button>
+              )
+            })}
           </div>
         </div>
         <div className="h-1/2 w-full bg-wave bg-no-repeat">
-
         </div>
       </div>
       <Header />
