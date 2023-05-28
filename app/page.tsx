@@ -1,21 +1,17 @@
 "use client";
 //^^^ if you don't add this then by default every page is a server component so you can't use stuff like useState
 import Header from './components/Header';
-import { useState, useEffect } from "react";
+import { useState} from "react";
 import useMedStore from "./lib/useMedStore";
 import { IMed } from "./lib/IMed";
 import { FaCircle } from 'react-icons/fa';
+import { v4 as uuidv4 } from 'uuid';
 
 export default function Home() {
-    const drugs = useMedStore(state => state.meds);
     const addDrugs = useMedStore(state => state.addMed);
     const [drugOptions, setDrugOptions] = useState([]);
-    const [drugList, setDrugList] = useState<IMed[]>([]);
     const [drugSearch, setDrugSearch] = useState<string>("");
   
-    useEffect(() => {
-        setDrugList(drugs);
-    }, [drugs]);
 
     const getDrugs = async () => {
         if(drugSearch){
@@ -44,7 +40,7 @@ export default function Home() {
           <div className='flex flex-col overflow-y-scroll'>
             {drugOptions.map((drug: IMed)=>{
               return(
-                <button onClick={()=>{addDrugs({name: drug.name, rxcui: drug.rxcui})}} className='flex items-center gap-2 my-2'>
+                <button key={uuidv4()} onClick={()=>{addDrugs({name: drug.name, rxcui: drug.rxcui})}} className='flex items-center gap-2 my-2'>
                   <FaCircle size={13} className='text-white' />
                   <h1 className='truncate ... text-lg text-white'>{drug.name}</h1>
                 </button>

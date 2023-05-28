@@ -3,6 +3,7 @@ import Header from '../components/Header';
 import { useState, useEffect } from "react";
 import useMedStore from "../lib/useMedStore";
 import { IMed } from "../lib/IMed";
+import { v4 as uuidv4 } from 'uuid';
 
 
 export default function List(){
@@ -36,7 +37,7 @@ export default function List(){
             <div className='flex flex-col overflow-y-scroll'>
             {drugList.map((drug: IMed)=>{
                 return(
-                <button className='flex items-center gap-2 my-2'>
+                <button key={uuidv4()} className='flex items-center gap-2 my-2'>
                     {/* <FaCircle size={13} className='text-white' /> */}
                     <h1 className='truncate ... text-lg text-white'>{drug.name}</h1>
                 </button>
