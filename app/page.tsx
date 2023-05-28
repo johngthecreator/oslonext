@@ -1,38 +1,50 @@
 "use client";
 //^^^ if you don't add this then by default every page is a server component so you can't use stuff like useState
-import Image from 'next/image'
-import { useState } from 'react'
+import Header from './components/Header';
+import { useState, useEffect } from "react";
+import useMedStore from "./lib/useMedStore";
+import { IMed } from "./lib/IMed";
 
 export default function Home() {
+    const drugs = useMedStore(state => state.meds);
+    const addDrugs = useMedStore(state => state.addMed);
+    const [drugOptions, setDrugOptions] = useState([]);
+    const [drugList, setDrugList] = useState<IMed[]>([]);
+    const [drugSearch, setDrugSearch] = useState<string>("");
+  
+    useEffect(() => {
+        setDrugList(drugs);
+    }, [drugs]);
+
+    const getDrugs = async () => {
+        if(drugSearch){
+            try{
+                const res = await fetch(`https://rxnav.nlm.nih.gov/REST/drugs.json?name=${drugSearch}`);
+                const data = await res.json();
+                console.log(data)
+                if (data){
+                    setDrugOptions(data.drugGroup.conceptGroup[1].conceptProperties);
+                };
+            }catch (e){
+                console.log(e);
+            }
+        }
+    }
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24 bg-white">
-      <div>
-        <h1 className="text-4xl font-bold text-center">Find the medication alternative.</h1>
-        <h1 className="text-4xl font-bold text-center">that suits you the best.</h1>
-        <p>Oslo helps you find different alternatives to medication that you use on the daily.</p>
+    <main className="flex h-full flex-col items-center justify-between">
+      <div className='flex h-full w-full flex-col items-center'>
+        <div className='flex flex-col w-full h-2/3 bg-secondary p-6'>
+          <h1 className="text-white text-2xl font-black">Search</h1>
+          <div className='flex bg-white h-1/6 md:h-1/5 rounded-xl items-center justify-between overflow-hidden my-2'>
+            <input type='text' className='my-4 outline-0 w-4/5 px-2 m-0'/>
+            <button className='m-2 h-[20px] w-[20px] bg-secondary rounded-xl'></button>
+          </div>
+        </div>
+        <div className="h-1/2 w-full bg-wave bg-no-repeat">
+
+        </div>
       </div>
+      <Header />
     </main>
   )
 }
-
-// Example server component that fetches data from the api before page is rendered.
-// export default async function Home() {
-//     const res = await fetch("https://rxnav.nlm.nih.gov/REST/drugs.json?name=lexapro");
-//     const data = await res.json();
-//     const drugName = data.drugGroup.conceptGroup[1].conceptProperties[0].name
-//   return (
-//     <main className="flex min-h-screen flex-col items-center justify-between p-24">
-//       <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px]">
-//         <Image
-//           className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-//           src="/next.svg"
-//           alt="Next.js Logo"
-//           width={180}
-//           height={37}
-//           priority
-//         />
-//       </div>
-//       <h1>{drugName}</h1>
-//     </main>
-//   )
-// }

@@ -7,11 +7,16 @@ module.exports = {
   ],
   theme: {
     extend: {
-      backgroundImage: {
-        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-conic':
-          'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+      colors:{
+        primary: '#EBFAFF',
+        secondary: '#5142F0'
       },
+      backgroundImage: {
+        wave: "url('/wave.svg')",
+      },
+      // dropShadow: {
+      //   "xl":"0 20px 13px rgb(81, 66, 240, 0.08)",
+      // }
     },
   },
   plugins: [],
